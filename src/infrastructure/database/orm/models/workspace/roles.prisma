@@ -1,0 +1,14 @@
+model Role {
+  id String @id @default(uuid())
+
+  title String
+
+  roleActions      RoleAction[]
+  projectMembers   ProjectMember[]
+  workspaceMembers WorkspaceMember[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("roles")
+}

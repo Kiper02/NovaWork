@@ -1,0 +1,14 @@
+model RoleAction {
+  id String @id @default(uuid())
+
+  role   Role   @relation(fields: [roleId], references: [id])
+  roleId String @map("role_id")
+
+  action   Action @relation(fields: [actionId], references: [id])
+  actionId String @map("action_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("role_actions")
+}

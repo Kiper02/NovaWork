@@ -1,0 +1,17 @@
+model PortfolioJob {
+  id String @id @default(ulid())
+
+  title       String
+  description String @db.Text
+
+  skills String[]
+  images String[]
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("portfolio_jobs")
+}

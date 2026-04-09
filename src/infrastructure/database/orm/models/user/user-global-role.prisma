@@ -1,0 +1,11 @@
+model UserGlobalRole {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  role   GlobalRole @relation(fields: [roleId], references: [id])
+  roleId String     @map("role_id")
+
+  @@map("users_global_roles")
+}

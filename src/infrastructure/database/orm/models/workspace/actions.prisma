@@ -1,0 +1,14 @@
+model Action {
+  id String @id @default(uuid())
+
+  title       String
+  description String
+  execute     String
+
+  roleActions RoleAction[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("actions")
+}

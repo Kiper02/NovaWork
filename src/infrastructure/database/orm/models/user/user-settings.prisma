@@ -1,0 +1,11 @@
+model UserSettings {
+  id String @id @default(uuid())
+
+  isTotpEnabled Boolean @default(false) @map("is_totp_enabled")
+  totpSecret    String? @map("totp_secret")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @map("user_id")
+
+  @@map("user_settings")
+}

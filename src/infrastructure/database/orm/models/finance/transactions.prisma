@@ -1,0 +1,30 @@
+model Transaction {
+  id String @id @default(uuid())
+
+  title       String
+  description String
+
+  amount Decimal
+
+  type   EnumTransactionType
+  status EnumTransactionStatus @default(PENDING)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("transactions")
+}
+
+enum EnumTransactionType {
+  DEPOSIT
+  WITHDRAWAL
+}
+
+enum EnumTransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}

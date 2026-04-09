@@ -1,0 +1,10 @@
+model GlobalRole {
+  id String @id @default(uuid())
+
+  name String @unique
+
+  permissions     GlobalPermission[]
+  userGlobalRoles UserGlobalRole[]
+
+  @@map("global_roles")
+}

@@ -1,0 +1,15 @@
+model Subscription {
+  id String @id @default(uuid())
+
+  startDate DateTime
+  endDate   DateTime
+  autoRenew Boolean  @default(false) @map("auto_renew")
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String  @unique @map("account_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("subscriptions")
+}
