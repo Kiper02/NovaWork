@@ -1,0 +1,18 @@
+model Notification {
+  id String @id @default(uuid())
+
+  title    String
+  body     String
+  type     EnumNotificationType
+  metadata Json?
+
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @map("updated_at")
+
+  @@map("notifications")
+}
+
+enum EnumNotificationType {
+  BID_ACCEPTED
+  BID_REJECTED
+}

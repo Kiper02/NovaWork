@@ -1,0 +1,10 @@
+model TaskCategory {
+  taskId     String @map("task_id")
+  categoryId String @map("category_id")
+
+  task     Task     @relation(fields: [taskId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@id([taskId, categoryId])
+  @@map("task_categories")
+}

@@ -1,6 +1,6 @@
 import { UpdateAccountDto } from '../dto/account/update-account.dto';
 import { IUpdateAccountCommand } from '../../core/use-cases/account/update/update-account.command';
-import { AccountEntity } from '../../core/domain/entities/account.entity';
+import { AccountEntity } from '../../core/domain/entities/finance/account.entity';
 import { AccountResponseDto } from '../dto/account/account-response.dto';
 import { CreateAccountDto } from '../dto/account/create-account.dto';
 import { ICreateAccountCommand } from '../../core/use-cases/account/create-account/create-account.command';
@@ -42,7 +42,9 @@ export class AccountMapper {
       id: entity.id,
       availableBalance: entity.availableBalance,
       frozenBalance: entity.frozenBalance,
-      userId: entity.userId
+      userId: entity.userId,
+      storageQuotaBytes: Number(entity.storageQuotaBytes),
+      storageUsedBytes: Number(entity.storageUsedBytes),
     };
   }
 }

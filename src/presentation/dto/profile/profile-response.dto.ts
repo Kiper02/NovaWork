@@ -31,6 +31,12 @@ export class ProfileResponseDto {
   public lastName: string;
 
   @ApiProperty({
+    description: 'URL аватара',
+    example: 'https://example.com'
+  })
+  public avatar: string | null;
+
+  @ApiProperty({
     description: 'Дата создания',
     example: '2024-01-15T12:30:00.000Z',
   })

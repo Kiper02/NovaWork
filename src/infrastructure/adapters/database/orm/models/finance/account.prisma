@@ -1,0 +1,20 @@
+model Account {
+  id String @id @default(uuid())
+
+  availableBalance Decimal @default(0) @map("available_balance")
+  frozenBalance    Decimal @default(0) @map("frozen_balance")
+
+  subscription Subscription?
+
+  storageQuotaBytes BigInt @default(1000000000) @map("storage_quota_bytes")
+  storageUsedBytes  BigInt @default(0) @map("storage_used_bytes")
+
+  payments      Payment[]
+  beneficiaries Beneficiary[]
+  transactions  Transaction[]
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @map("user_id")
+
+  @@map("accounts")
+}

@@ -1,0 +1,28 @@
+model Beneficiary {
+  id      String              @id @default(uuid())
+  type    EnumBeneficiaryType
+  details Json                @default("{}")
+
+  externalId String? @map("external_id")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+
+  bankDetails BankDetails[]
+
+  @@index([accountId])
+  @@map("beneficiaries")
+}
+
+enum EnumBeneficiaryType {
+  FL_RESIDENT
+  FL_NONRESIDENT
+  UL_RESIDENT
+  UL_NONRESIDENT
+  IP_RESIDENT
+  IP_NONRESIDENT
+  LITE_CONTACT
+}

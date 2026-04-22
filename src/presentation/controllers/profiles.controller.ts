@@ -7,8 +7,13 @@ import {
   Put,
   HttpCode,
   UseFilters,
+  UseGuards,
+  Param,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import {
+  ApiConsumes,
   ApiCookieAuth,
   ApiOperation,
   ApiResponse,
@@ -29,25 +34,36 @@ import { UpdateProfileUseCase } from '../../core/use-cases/profile/update/update
 import { ProfilePaginatedResponse } from '../dto/profile/profile-paginated-response';
 import { FindMyProfileUseCase } from '../../core/use-cases/profile/find-my/find-my-profile.use-case';
 import { ProfileNotFoundExceptionFilter } from '../filters/profile/profile-not-found-exception.filter';
+import { GlobalRolesGuard } from '../guards/roles.guard';
+import {
+  READ_RESOURCES,
+  UPDATE_RESOURCES,
+} from '../../core/domain/constants/roles.constants';
+import { StoragePort } from '../../core/ports/storage/storage.port';
+import {
+  FileInterceptor,
+} from '@nestjs/platform-express';
 
-@ApiTags('Profile')
+@ApiTags('Profiles')
 @ApiCookieAuth()
+@UseGuards(GlobalRolesGuard)
 @Auth()
-@Controller('profile')
+@Controller('profiles')
 export class ProfilesController {
   constructor(
     private readonly createProfileUseCase: CreateProfileUseCase,
     private readonly findAllProfileUseCase: FindAllProfileUseCase,
     private readonly updateProfileUseCase: UpdateProfileUseCase,
     private readonly findMyProfileUseCase: FindMyProfileUseCase,
+    private readonly storage: StoragePort,
   ) {}
 
-  @Roles('super_admin', 'admin')
+  @Roles(...UPDATE_RESOURCES)
   @Post()
   @HttpCode(200)
   @ApiOperation({
     summary: 'Создать новый профиль',
-    description: 'Создает новый профиль. Доступно для: super_admin, admin',
+    description: `Создает новый профиль. Доступно для: ${UPDATE_RESOURCES}`,
   })
   @ApiResponse({
     status: 200,
@@ -69,10 +85,12 @@ export class ProfilesController {
   public async create(@Body() dto: CreateProfileDto) {
     const command = ProfileMapper.toCreateCommand(dto);
     const profile = await this.createProfileUseCase.execute(command);
-    return ProfileMapper.toResponse(profile);
+    return ProfileMapper.toResponse(profile, this.storage);
   }
 
-  @Put()
+  @Put(':profileId')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiConsumes('multipart/form-data')
   @HttpCode(200)
   @ApiOperation({
     summary: 'Обновить профиль',
@@ -93,20 +111,26 @@ export class ProfilesController {
   })
   public async update(
     @Body() dto: UpdateProfileDto,
+    @Param('profileId') profileId: string,
     @Authorized('id') userId: string,
+    @UploadedFile() avatar?: Express.Multer.File,
   ) {
-    const command = ProfileMapper.toUpdateCommand(userId, dto);
+    const command = ProfileMapper.toUpdateCommand(
+      profileId,
+      userId,
+      dto,
+      avatar,
+    );
     const profile = await this.updateProfileUseCase.execute(command);
-    return ProfileMapper.toResponse(profile);
+    return ProfileMapper.toResponse(profile, this.storage);
   }
 
-  @Roles('super_admin', 'admin', 'moderator', 'support')
+  @Roles(...READ_RESOURCES)
   @Get()
   @HttpCode(200)
   @ApiOperation({
     summary: 'Получить все профили',
-    description:
-      'Получает все профили платформы. Доступно для: super_admin, admin, moderator, support',
+    description: `Получает все профили платформы. Доступно для: ${READ_RESOURCES}`,
   })
   @ApiResponse({
     status: 200,
@@ -124,9 +148,8 @@ export class ProfilesController {
   public async findAll(@Query() query: FindAllProfileQueryDto) {
     const command = ProfileMapper.toFindAllCommand(query);
     const paginatedResult = await this.findAllProfileUseCase.execute(command);
-    return PaginationFormatterUtil.format(
-      paginatedResult,
-      ProfileMapper.toResponse,
+    return PaginationFormatterUtil.formatAsync(paginatedResult, (entity) =>
+      ProfileMapper.toResponse(entity, this.storage),
     );
   }
 
@@ -135,8 +158,7 @@ export class ProfilesController {
   @HttpCode(200)
   @ApiOperation({
     summary: 'Получить мой профиль',
-    description:
-      'Получает профиль текущего пользователя',
+    description: 'Получает профиль текущего пользователя',
   })
   @ApiResponse({
     status: 200,
@@ -154,6 +176,6 @@ export class ProfilesController {
   public async findMy(@Authorized('id') userId: string) {
     const command = ProfileMapper.toFindMyCommand(userId);
     const profile = await this.findMyProfileUseCase.execute(command);
-    return ProfileMapper.toResponse(profile);
+    return ProfileMapper.toResponse(profile, this.storage);
   }
 }

@@ -1,4 +1,4 @@
-import { EnumTaskStatus } from '../../../domain/entities/task.entity';
+import { EnumTaskStatus } from '../../../domain/entities/project/task.entity';
 
 export interface ITaskUpdateCommand {
   id: string;
@@ -9,4 +9,5 @@ export interface ITaskUpdateCommand {
   status?: EnumTaskStatus;
   isPublished?: boolean;
   userId: string;
+  categoryIds?: string[]
 }

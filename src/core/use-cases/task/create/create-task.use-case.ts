@@ -1,12 +1,14 @@
-import { TaskRepository } from '../../../domain/repositories/task.repository';
+import { TaskRepository } from '../../../domain/repositories/project/task.repository';
 import { ICreateTaskCommand } from './create-task.command';
 import {
   EnumTaskStatus,
   TaskEntity,
-} from '../../../domain/entities/task.entity';
+} from '../../../domain/entities/project/task.entity';
 import { v4 as uuid } from 'uuid';
 import { Injectable } from '@nestjs/common';
-import { WorkspaceRepository } from '../../../domain/repositories/workspace.repository';
+import { WorkspaceRepository } from '../../../domain/repositories/project/workspace.repository';
+import { UpdateTaskException } from '../../../domain/exceptions/task/update-task.exception';
+import { TaskInvalidPriceRangeException } from '../../../domain/exceptions/task/task-invalid-price-range.exception';
 
 @Injectable()
 export class CreateTaskUseCase {
@@ -24,6 +26,10 @@ export class CreateTaskUseCase {
       workspaceId = defaultWorkspace!.id;
     }
 
+    if(command.maxPrice < command.minPrice) {
+      throw new TaskInvalidPriceRangeException()
+    }
+
     const taskEntity = new TaskEntity(
       uuid(),
       command.title,
@@ -33,12 +39,19 @@ export class CreateTaskUseCase {
       command.status || EnumTaskStatus.NOT_DISTRIBUTED,
       command.isPublished || true,
       command.userId,
+      command.categoryIds ?? [],
       new Date(),
       new Date(),
       workspaceId!,
       command.projectId ?? null,
     );
 
-    return this.taskRepository.save(taskEntity);
+    const task = await this.taskRepository.save(taskEntity);
+
+    if(!task) {
+      throw new UpdateTaskException()
+    }
+
+    return task;
   }
 }

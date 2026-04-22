@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { InternalServerErrorException } from '@nestjs/common';
-import { UserEntity } from '../../core/domain/entities/user.entity';
+import { UserEntity } from '../../core/domain/entities/user/user.entity';
 import { ConfigService } from '@nestjs/config';
 
 export class SessionHelper {

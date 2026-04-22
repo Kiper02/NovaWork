@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { SubscriptionRepository } from '../../../domain/repositories/subscription.repository';
+import { SubscriptionRepository } from '../../../domain/repositories/shared/subscription.repository';
 import { ICreateSubscriptionCommand } from './create-subscription.command';
 import { Injectable } from '@nestjs/common';
 

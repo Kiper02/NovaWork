@@ -1,5 +1,5 @@
 import { CreateUserDto } from '../dto/user/create-user.dto';
-import { UserEntity } from '../../core/domain/entities/user.entity';
+import { UserEntity } from '../../core/domain/entities/user/user.entity';
 import { UserResponseDto } from '../dto/user/user-response.dto';
 import { ICreateUserCommand } from '../../core/use-cases/user/create-user/create-user.command';
 import { IFindMeCommand } from '../../core/use-cases/user/find-me/find-me.command';
@@ -9,6 +9,7 @@ import { AccountResponseDto } from '../dto/account/account-response.dto';
 import { ProfileResponseDto } from '../dto/profile/profile-response.dto';
 import { AccountMapper } from './account.mapper';
 import { ProfileMapper } from './profile.mapper';
+import { StoragePort } from '../../core/ports/storage/storage.port';
 
 export class UserMapper {
   public static toCreateCommand(dto: CreateUserDto): ICreateUserCommand {
@@ -28,8 +29,8 @@ export class UserMapper {
     }
   }
 
-  public static toFindMeResponse(aggregate: UserAggregate): FindMeResponseDto {
-    const {user, account, profile} = aggregate;
+  public static async toFindMeResponse(aggregate: UserAggregate, storage: StoragePort): Promise<FindMeResponseDto> {
+    const {user, account, profile, workspaces} = aggregate;
 
     let accountResponseDto: AccountResponseDto | null = null;
     let profileResponseDto: ProfileResponseDto | null = null;
@@ -38,7 +39,7 @@ export class UserMapper {
       accountResponseDto = AccountMapper.toResponse(account);
     }
     if(profile) {
-      profileResponseDto = ProfileMapper.toResponse(profile)
+      profileResponseDto = await ProfileMapper.toResponse(profile, storage);
     }
 
     const userResponseDto = this.toResponse(user);
@@ -47,6 +48,7 @@ export class UserMapper {
       ...userResponseDto,
       account: accountResponseDto,
       profile: profileResponseDto,
+      workspaces: workspaces ?? []
     }
   }
 

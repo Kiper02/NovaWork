@@ -8,13 +8,14 @@ import { Auth } from '../decorators/auth.decorator';
 import {
   Body,
   Controller,
-  Get, HttpCode,
-  HttpStatus,
+  Get,
+  HttpCode,
   Param,
   Post,
   Put,
   Query,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateTaskUseCase } from '../../core/use-cases/task/create/create-task.use-case';
 import { FindAllTaskUseCase } from '../../core/use-cases/task/find-all/find-all-task.use-case';
@@ -25,16 +26,24 @@ import { CreateTaskDto } from '../dto/task/create-task.dto';
 import { TaskMapper } from '../mappers/task.mapper';
 import { Authorized } from '../decorators/authorized.decorator';
 import { UpdateTaskDto } from '../dto/task/update-task.dto';
-import { TaskPaginatedResponse } from '../dto/task/task-paginated-response';
 import { Roles } from '../decorators/roles.decorator';
 import { FindAllTaskQueryDto } from '../dto/task/find-all-task-query.dto';
 import { PaginationFormatterUtil } from '../utils/pagination-formatter.util';
 import { TaskNotFoundExceptionFilter } from '../filters/task/task-not-found-exception.filter';
 import { TaskForbiddenExceptionFilter } from '../filters/task/task-forbidden-exception.filter';
+import { GlobalRolesGuard } from '../guards/roles.guard';
+import {
+  READ_RESOURCES,
+  UPDATE_RESOURCES,
+} from '../../core/domain/constants/roles.constants';
+import { TaskForDetailsPaginatedResponse } from '../dto/task/task-for-details-paginated-response';
+import { TaskResponseForDetailsDto } from '../dto/task/task-response-for-details.dto';
+import { StoragePort } from '../../core/ports/storage/storage.port';
 
 
 @ApiTags('Tasks')
 @ApiCookieAuth()
+@UseGuards(GlobalRolesGuard)
 @Auth()
 @Controller('tasks')
 export class TasksController {
@@ -43,6 +52,7 @@ export class TasksController {
     private readonly taskUpdateUseCase: TaskUpdateUseCase,
     private readonly findAllTaskUseCase: FindAllTaskUseCase,
     private readonly findTaskByIdUseCase: FindTaskByIdUseCase,
+    private readonly storage: StoragePort
   ) {}
 
   @Post()
@@ -74,13 +84,14 @@ export class TasksController {
   }
 
   @UseFilters(TaskNotFoundExceptionFilter, TaskForbiddenExceptionFilter)
+  @Roles(...UPDATE_RESOURCES)
   @Auth()
   @Put(':id')
   @HttpCode(200)
   @ApiOperation({
     summary: 'Обновить задачу',
     description:
-      'Обновляет задачу. Доступно для: владельца задачи и пользователям с ролями super_admin, admin, moderator',
+      `Обновляет задачу. Доступно для: владельца задачи и пользователям с ролями ${UPDATE_RESOURCES}`,
   })
   @ApiResponse({
     status: 200,
@@ -105,23 +116,22 @@ export class TasksController {
     @Authorized('id') userId: string,
   ) {
     const command = TaskMapper.toUpdateCommand(id, userId, dto);
-    const profile = await this.taskUpdateUseCase.execute(command);
-    return TaskMapper.toResponse(profile);
+    const task = await this.taskUpdateUseCase.execute(command);
+    return TaskMapper.toResponse(task);
   }
 
-  @Roles('super_admin', 'admin', 'moderator', 'support')
   @Auth()
   @Get()
   @HttpCode(200)
   @ApiOperation({
     summary: 'Получить все задачи платформы',
     description:
-      'Получает все задачи платформы. Доступно для: super_admin, admin, moderator, support',
+      `Получает все задачи платформы`,
   })
   @ApiResponse({
     status: 200,
     description: 'Задачи успешно получены',
-    type: TaskPaginatedResponse,
+    type: TaskForDetailsPaginatedResponse,
   })
   @ApiResponse({
     status: 401,
@@ -134,9 +144,9 @@ export class TasksController {
   public async findAll(@Query() query: FindAllTaskQueryDto) {
     const command = TaskMapper.toFindAllCommand(query);
     const paginatedResult = await this.findAllTaskUseCase.execute(command);
-    return PaginationFormatterUtil.format(
+    return PaginationFormatterUtil.formatAsync(
       paginatedResult,
-      TaskMapper.toResponse,
+      (entity) => TaskMapper.toResponseForDetails(entity, this.storage),
     );
   }
 
@@ -150,7 +160,7 @@ export class TasksController {
   @ApiResponse({
     status: 200,
     description: 'Задача успешно получена',
-    type: TaskPaginatedResponse,
+    type: TaskResponseForDetailsDto,
   })
   @ApiResponse({
     status: 401,
@@ -163,6 +173,6 @@ export class TasksController {
   public async findById(@Param('id') id: string) {
     const command = TaskMapper.toFindByIdCommand(id);
     const result = await this.findTaskByIdUseCase.execute(command);
-    return TaskMapper.toResponse(result);
+    return TaskMapper.toResponseForDetails(result, this.storage);
   }
 }

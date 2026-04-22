@@ -1,5 +1,5 @@
 import { RedisStore } from 'connect-redis';
-import { RedisService } from '../redis/redis.service';
+import { RedisService } from '../adapters/redis/redis.service';
 import { msUtil } from '../../shared/utils/ms.util';
 import { parseBooleanUtil } from '../../shared/utils/parse-boolean.util';
 import { ConfigService } from '@nestjs/config';

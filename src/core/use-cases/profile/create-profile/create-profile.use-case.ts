@@ -1,8 +1,11 @@
 import { v4 as uuid } from 'uuid';
 import { ICreateProfileCommand } from './create-profile.command';
-import { ProfileEntity } from '../../../domain/entities/profile.entity';
-import { ProfileRepository } from '../../../domain/repositories/profile.repository';
+import { ProfileEntity } from '../../../domain/entities/user/profile.entity';
+import { ProfileRepository } from '../../../domain/repositories/user/profile.repository';
 import { Injectable } from '@nestjs/common';
+import {
+  NotificationSettingsValueObject
+} from '../../../domain/value-objects/profile/notification-settings.value-object';
 
 @Injectable()
 export class CreateProfileUseCase {
@@ -15,6 +18,8 @@ export class CreateProfileUseCase {
       command.middleName,
       command.lastName,
       command.userId,
+      null,
+      NotificationSettingsValueObject.default(),
       new Date(),
       new Date(),
     );

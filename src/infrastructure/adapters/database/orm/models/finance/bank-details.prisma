@@ -1,0 +1,22 @@
+model BankDetails {
+  id        String              @id @default(uuid())
+  type      EnumBankDetailsType
+  details   Json
+  isDefault Boolean             @default(false)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  beneficiary   Beneficiary @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  beneficiaryId String
+
+  @@unique([beneficiaryId, isDefault])
+  @@index([beneficiaryId])
+
+  @@map("bank_details")
+}
+
+enum EnumBankDetailsType {
+  CARD
+  SBP
+  PAYMENT_DETAILS
+}

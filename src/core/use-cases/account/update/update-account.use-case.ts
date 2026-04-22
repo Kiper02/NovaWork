@@ -1,6 +1,6 @@
-import { AccountRepository } from '../../../domain/repositories/account.repository';
+import { AccountRepository } from '../../../domain/repositories/finance/account.repository';
 import { IUpdateAccountCommand } from './update-account.command';
-import { UserRepository } from '../../../domain/repositories/user.repository';
+import { UserRepository } from '../../../domain/repositories/user/user.repository';
 import { UserNotFoundException } from '../../../domain/exceptions/user/user-not-found.exception';
 import { Injectable } from '@nestjs/common';
 

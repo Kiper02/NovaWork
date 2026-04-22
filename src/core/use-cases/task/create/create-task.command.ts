@@ -1,4 +1,4 @@
-import { EnumTaskStatus } from '../../../domain/entities/task.entity';
+import { EnumTaskStatus } from '../../../domain/entities/project/task.entity';
 
 export interface ICreateTaskCommand {
   title: string;
@@ -10,4 +10,5 @@ export interface ICreateTaskCommand {
   userId: string;
   projectId?: string;
   workspaceId?: string;
+  categoryIds?: string[];
 }

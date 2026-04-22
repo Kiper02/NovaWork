@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDecimal, IsNotEmpty } from 'class-validator';
+import { IsDecimal, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateAccountDto {
   @ApiProperty({
@@ -12,7 +12,7 @@ export class CreateAccountDto {
     description: 'Доступный баланс пользователя',
     example: 0,
   })
-  @IsDecimal()
+  @IsNumber()
   @IsNotEmpty()
   public availableBalance: number;
 
@@ -20,7 +20,7 @@ export class CreateAccountDto {
     description: 'Замороженные средства пользователя',
     example: 0,
   })
-  @IsDecimal()
+  @IsNumber()
   @IsNotEmpty()
   public frozenBalance: number;
 }

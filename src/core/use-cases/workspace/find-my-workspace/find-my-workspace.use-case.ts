@@ -1,7 +1,7 @@
-import { WorkspaceRepository } from '../../../domain/repositories/workspace.repository';
+import { WorkspaceRepository } from '../../../domain/repositories/project/workspace.repository';
 import { PaginationParamsValueObject } from '../../../domain/value-objects/shared/pagination-params.value-object';
 import { PaginatedResultValueObject } from '../../../domain/value-objects/shared/paginated-result.value-object';
-import { WorkspaceEntity } from '../../../domain/entities/workspace.entity';
+import { WorkspaceEntity } from '../../../domain/entities/project/workspace.entity';
 import { IFindMyWorkspaceCommand } from './find-my-workspace.command';
 import { Injectable } from '@nestjs/common';
 

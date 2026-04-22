@@ -5,11 +5,21 @@ import { ITaskUpdateCommand } from '../../core/use-cases/task/update/task-update
 import { FindAllTaskQueryDto } from '../dto/task/find-all-task-query.dto';
 import { IFindAllTaskCommand } from '../../core/use-cases/task/find-all/find-all-task.command';
 import { TaskResponseDto } from '../dto/task/task-response.dto';
-import { TaskEntity } from '../../core/domain/entities/task.entity';
+import { TaskEntity } from '../../core/domain/entities/project/task.entity';
 import { IFindTaskByIdCommand } from '../../core/use-cases/task/find-by-id/find-task-by-id.command';
+import { TaskAggregate } from '../../core/domain/aggregates/task.aggregate';
+import { CategoryMapper } from './category.mapper';
+import { UserMapper } from './user.mapper';
+import { TaskResponseForDetailsDto } from '../dto/task/task-response-for-details.dto';
+import { StoragePort } from '../../core/ports/storage/storage.port';
+import { ProfileResponseDto } from '../dto/profile/profile-response.dto';
+import { ProfileMapper } from './profile.mapper';
 
 export class TaskMapper {
-  public static toCreateCommand(userId: string, dto: CreateTaskDto): ICreateTaskCommand {
+  public static toCreateCommand(
+    userId: string,
+    dto: CreateTaskDto,
+  ): ICreateTaskCommand {
     return {
       title: dto.title,
       description: dto.description,
@@ -18,7 +28,8 @@ export class TaskMapper {
       status: dto.status,
       isPublished: dto.isPublished,
       userId: userId,
-      projectId: dto.projectId
+      categoryIds: dto.categoryIds,
+      projectId: dto.projectId,
     };
   }
 
@@ -34,8 +45,9 @@ export class TaskMapper {
       minPrice: dto.minPrice,
       maxPrice: dto.maxPrice,
       status: dto.status,
+      categoryIds: dto.categoryIds,
       isPublished: dto.isPublished,
-      userId: userId
+      userId: userId,
     };
   }
 
@@ -61,7 +73,44 @@ export class TaskMapper {
   public static toFindByIdCommand(taskId: string): IFindTaskByIdCommand {
     return {
       taskId: taskId,
+    };
+  }
+
+  public static async toResponseForDetails(
+    aggregate: TaskAggregate,
+    storage: StoragePort,
+  ): Promise<TaskResponseForDetailsDto> {
+    const { task, categories, creator } = aggregate;
+
+    const categoriesResponse = categories.map(CategoryMapper.toResponse);
+    const { user, profile } = creator;
+
+    let profileResponse: ProfileResponseDto | null = null;
+
+    if (profile) {
+      profileResponse = await ProfileMapper.toResponse(profile, storage);
     }
+
+    const userResponse = UserMapper.toResponse(user);
+
+    return {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      isPublished: task.isPublished,
+      minPrice: task.minPrice,
+      maxPrice: task.maxPrice,
+      status: task.status,
+      user: {
+        ...userResponse,
+        profile: profileResponse
+      },
+      projectId: task.projectId,
+      workspaceId: task.workspaceId,
+      categories: categoriesResponse,
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
+    };
   }
 
   public static toResponse(entity: TaskEntity): TaskResponseDto {
@@ -76,6 +125,7 @@ export class TaskMapper {
       userId: entity.userId,
       projectId: entity.projectId,
       workspaceId: entity.workspaceId,
+      categoryIds: entity.categoryIds,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

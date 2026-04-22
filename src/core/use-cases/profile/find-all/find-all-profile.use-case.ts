@@ -1,5 +1,5 @@
 import { PaginationParamsValueObject } from '../../../domain/value-objects/shared/pagination-params.value-object';
-import { ProfileRepository } from '../../../domain/repositories/profile.repository';
+import { ProfileRepository } from '../../../domain/repositories/user/profile.repository';
 import { IFindAllProfileCommand } from './find-all-profile.command';
 import { ProfileFiltersValueObject } from '../../../domain/value-objects/profile/profile-filters.value.object';
 import { Injectable } from '@nestjs/common';

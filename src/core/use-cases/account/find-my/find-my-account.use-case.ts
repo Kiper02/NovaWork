@@ -1,4 +1,4 @@
-import { AccountRepository } from '../../../domain/repositories/account.repository';
+import { AccountRepository } from '../../../domain/repositories/finance/account.repository';
 import { IFindMyAccountCommand } from './find-my-account.command';
 import { AccountNotFoundException } from '../../../domain/exceptions/account/account-not-found.exception';
 import { Injectable } from '@nestjs/common';

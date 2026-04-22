@@ -1,4 +1,11 @@
-import { Controller, Post, Body, ConflictException, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Req,
+  Res,
+  UseFilters,
+} from '@nestjs/common';
 import {
   ApiCookieAuth,
   ApiOperation,
@@ -16,6 +23,7 @@ import { SessionHelper } from '../helpers/session.helper';
 import type {Request, Response} from 'express'
 import { Auth } from '../decorators/auth.decorator';
 import { ConfigService } from '@nestjs/config';
+import { UserAlreadyExistsExceptionFilter } from '../filters/user/user-already-exists-exception.filter';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -25,6 +33,7 @@ export class AuthController {
     private readonly loginUseCase: LoginUseCase,
   ) {}
 
+  @UseFilters(UserAlreadyExistsExceptionFilter)
   @Post('register')
   @ApiOperation({
     summary: 'Регистрация',
@@ -40,15 +49,9 @@ export class AuthController {
     description: 'Пользователь уже существует',
   })
   public async register(@Body() dto: RegisterDto) {
-    try {
-      const command = AuthMapper.toRegisterCommand(dto);
-      const user = await this.registerUseCase.execute(command);
-      return AuthMapper.toResponse(user);
-    } catch (e) {
-      if (e instanceof UserAlreadyExistsException) {
-        throw new ConflictException(e.message);
-      }
-    }
+    const command = AuthMapper.toRegisterCommand(dto);
+    const user = await this.registerUseCase.execute(command);
+    return AuthMapper.toResponse(user);
   }
 
   @Post('login')

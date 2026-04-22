@@ -1,5 +1,5 @@
-import { WorkspaceRepository } from '../../../domain/repositories/workspace.repository';
-import { WorkspaceEntity } from '../../../domain/entities/workspace.entity';
+import { WorkspaceRepository } from '../../../domain/repositories/project/workspace.repository';
+import { WorkspaceEntity } from '../../../domain/entities/project/workspace.entity';
 import { v4 as uuid } from 'uuid';
 import { ICreateWorkspaceCommand } from './create-workspace.command';
 import { Injectable } from '@nestjs/common';

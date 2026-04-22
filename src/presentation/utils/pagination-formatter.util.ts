@@ -23,4 +23,23 @@ export class PaginationFormatterUtil {
     response.meta = meta;
     return response;
   }
+
+  static async formatAsync<T, R>(
+    paginatedResult: PaginatedResultValueObject<T>,
+    mapper: (entity: T) => Promise<R>,
+  ): Promise<PaginatedResponseDto<R>> {
+    const data = await Promise.all(paginatedResult.data.map(mapper));
+    const meta: PaginationMetaDto = {
+      page: paginatedResult.params.page,
+      limit: paginatedResult.params.limit,
+      total: paginatedResult.total,
+      totalPages: paginatedResult.totalPages,
+      hasNext: paginatedResult.hasNext,
+      hasPrev: paginatedResult.hasPrev,
+    };
+    const response = new PaginatedResponseDto<R>();
+    response.data = data;
+    response.meta = meta;
+    return response;
+  }
 }

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AccountResponseDto } from '../account/account-response.dto';
 import { ProfileResponseDto } from '../profile/profile-response.dto';
+import { WorkspaceResponseDto } from '../workspace/workspace-response.dto';
 
 export class FindMeResponseDto {
   @ApiProperty({
@@ -32,6 +33,12 @@ export class FindMeResponseDto {
     example: ProfileResponseDto,
   })
   profile: ProfileResponseDto | null;
+
+  @ApiProperty({
+    description: 'Рабочие пространства пользователя',
+    example: WorkspaceResponseDto
+  })
+  workspaces: WorkspaceResponseDto[]
 
   @ApiProperty({
     description: 'Дата создания',

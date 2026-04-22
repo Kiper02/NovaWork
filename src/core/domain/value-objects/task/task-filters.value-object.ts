@@ -1,4 +1,4 @@
-import { EnumTaskStatus } from '../../entities/task.entity';
+import { EnumTaskStatus } from '../../entities/project/task.entity';
 
 export class TaskFiltersValueObject {
   constructor(

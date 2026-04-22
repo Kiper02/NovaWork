@@ -5,7 +5,9 @@ import {
   Query,
   Get,
   Put,
-  UseFilters, HttpCode,
+  UseFilters,
+  HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiCookieAuth,
@@ -28,9 +30,16 @@ import { FindAllAccountQueryDto } from '../dto/account/find-all-account-query.dt
 import { AccountPaginatedResponse } from '../dto/account/account-paginated-response';
 import { Authorized } from '../decorators/authorized.decorator';
 import { AccountNotFoundExceptionFilter } from '../filters/account/account-not-found-exception.filter';
+import { UserNotFoundExceptionFilter } from '../filters/user/user-not-found-exception.filter';
+import { GlobalRolesGuard } from '../guards/roles.guard';
+import {
+  READ_RESOURCES,
+  UPDATE_RESOURCES,
+} from '../../core/domain/constants/roles.constants';
 
 @ApiTags('Account')
 @ApiCookieAuth()
+@UseGuards(GlobalRolesGuard)
 @Auth()
 @Controller('accounts')
 export class AccountsController {
@@ -41,12 +50,13 @@ export class AccountsController {
     private readonly findMyAccountUseCase: FindMyAccountUseCase,
   ) {}
 
-  @Roles('super_admin', 'admin')
+  @UseFilters(UserNotFoundExceptionFilter)
+  @Roles(...UPDATE_RESOURCES)
   @Post()
   @HttpCode(200)
   @ApiOperation({
     summary: 'Создать новый аккаунт',
-    description: 'Создает новый аккаунт. Доступно для: super_admin, admin',
+    description: `Создает новый аккаунт. Доступно для: ${UPDATE_RESOURCES}`,
   })
   @ApiResponse({
     status: 200,
@@ -71,13 +81,13 @@ export class AccountsController {
     return AccountMapper.toResponse(account);
   }
 
-  @Roles('super_admin', 'admin')
+  @Roles(...UPDATE_RESOURCES)
   @Auth()
   @Put()
   @HttpCode(200)
   @ApiOperation({
     summary: 'Обновить аккаунт',
-    description: 'Обновляет аккаунт. Доступно для: super_admin, admin',
+    description: `Обновляет аккаунт. Доступно для: ${UPDATE_RESOURCES}`,
   })
   @ApiResponse({
     status: 200,
@@ -102,14 +112,13 @@ export class AccountsController {
     return AccountMapper.toResponse(profile);
   }
 
-  @Roles('super_admin', 'admin', 'moderator', 'support')
+  @Roles(...READ_RESOURCES)
   @Auth()
   @Get()
   @HttpCode(200)
   @ApiOperation({
     summary: 'Получить все аккаунты',
-    description:
-      'Получает все аккаунты платформы. Доступно для: super_admin, admin, moderator, support',
+    description: `Получает все аккаунты платформы. Доступно для: ${READ_RESOURCES}`,
   })
   @ApiResponse({
     status: 200,

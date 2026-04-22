@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Query, Get, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Query,
+  Get,
+  HttpCode,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { WorkspaceResponseDto } from '../dto/workspace/workspace-response.dto';
 import { CreateWorkspaceUseCase } from '../../core/use-cases/workspace/create-workspace/create-workspace.use-case';
@@ -13,11 +21,14 @@ import { FindMyWorkspaceUseCase } from '../../core/use-cases/workspace/find-my-w
 import { PaginationFormatterUtil } from '../utils/pagination-formatter.util';
 import { Roles } from '../decorators/roles.decorator';
 import { WorkspacePaginatedResponseDto } from '../dto/workspace/workspace-paginated-response.dto';
+import { GlobalRolesGuard } from '../guards/roles.guard';
+import { READ_RESOURCES } from '../../core/domain/constants/roles.constants';
 
-@ApiTags('Workspace')
+@ApiTags('Workspaces')
 @ApiCookieAuth()
+@UseGuards(GlobalRolesGuard)
 @Auth()
-@Controller('workspace')
+@Controller('workspaces')
 export class WorkspacesController {
   constructor(
     private readonly createWorkspaceUseCase: CreateWorkspaceUseCase,
@@ -53,13 +64,13 @@ export class WorkspacesController {
     return WorkspaceMapper.toResponse(user);
   }
 
-  @Roles('super_admin', 'admin', 'moderator', 'support')
+  @Roles(...READ_RESOURCES)
   @Get('')
   @HttpCode(200)
   @ApiOperation({
     summary: 'Получить все рабочие пространства платформы',
     description:
-      'Получает все рабочие пространства платформы. Доступно для: super_admin, admin, moderator, support',
+      `Получает все рабочие пространства платформы. Доступно для: ${READ_RESOURCES}`,
   })
   @ApiResponse({
     status: 200,

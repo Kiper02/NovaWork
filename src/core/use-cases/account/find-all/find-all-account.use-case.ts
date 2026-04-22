@@ -1,4 +1,4 @@
-import { AccountRepository } from '../../../domain/repositories/account.repository';
+import { AccountRepository } from '../../../domain/repositories/finance/account.repository';
 import { IFindAllAccountCommand } from './find-all-account.command';
 import { AccountFiltersValueObject } from '../../../domain/value-objects/account/account-filters.value-object';
 import { PaginationParamsValueObject } from '../../../domain/value-objects/shared/pagination-params.value-object';

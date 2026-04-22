@@ -24,4 +24,16 @@ export class AccountResponseDto {
     example: 0,
   })
   public frozenBalance: number;
+
+  @ApiProperty({
+    description: 'Доступное пространство для статики',
+    example: 100_000_000_000,
+  })
+  public storageQuotaBytes: number;
+
+  @ApiProperty({
+    description: 'Использованное пространство',
+    example: 100_000,
+  })
+  public storageUsedBytes: number;
 }

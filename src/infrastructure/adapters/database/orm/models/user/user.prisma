@@ -1,0 +1,36 @@
+model User {
+  id String @id @default(uuid())
+
+  username String @unique
+  email    String @unique
+  password String
+
+  settings UserSettings?
+  profile  Profile?
+  account  Account?
+
+  workspaces       Workspace[]
+  workspaceMembers WorkspaceMember[]
+
+  project         Project[]
+  projectMembers  ProjectMember[]
+  userGlobalRoles UserGlobalRole[]
+
+  tasks               Task[]
+  services            Service[]
+  clientContracts     Contract[]     @relation("client_contracts")
+  contractorContracts Contract[]     @relation("contractor_contracts")
+  messages            Message[]
+  chatMembers         ChatMember[]
+  bids                Bid[]
+  portfolioJobs       PortfolioJob[]
+
+  senderInvitations    Invitation[] @relation("sender_invitations")
+  recipientInvitations Invitation[] @relation("recipient_invitations")
+  blockedChats         Chat[]       @relation("blocked_chats")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("users")
+}

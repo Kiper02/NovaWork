@@ -1,4 +1,4 @@
-import { EnumTaskStatus } from '../../../domain/entities/task.entity';
+import { EnumTaskStatus } from '../../../domain/entities/project/task.entity';
 
 export interface IFindAllTaskCommand {
   userId?: string;

@@ -4,7 +4,7 @@ import {
   Body,
   HttpCode,
   Get,
-  UseFilters,
+  UseFilters, UseGuards,
 } from '@nestjs/common';
 import { CreateUserUseCase } from '../../core/use-cases/user/create-user/create-user.use-case';
 import { CreateUserDto } from '../dto/user/create-user.dto';
@@ -22,18 +22,23 @@ import { Authorized } from '../decorators/authorized.decorator';
 import { FindMeUseCase } from '../../core/use-cases/user/find-me/find-me.use-case';
 import { UserNotFoundExceptionFilter } from '../filters/user/user-not-found-exception.filter';
 import { FindMeResponseDto } from '../dto/user/find-me-response.dto';
+import { GlobalRolesGuard } from '../guards/roles.guard';
+import { UPDATE_RESOURCES } from '../../core/domain/constants/roles.constants';
+import { StoragePort } from '../../core/ports/storage/storage.port';
 
 @ApiTags('Users')
 @ApiCookieAuth()
+@UseGuards(GlobalRolesGuard)
 @Auth()
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly findMeUseCase: FindMeUseCase,
+    private readonly storage: StoragePort
   ) {}
 
-  @Roles('super_admin', 'admin')
+  @Roles(...UPDATE_RESOURCES)
   @Post()
   @HttpCode(200)
   @ApiOperation({
@@ -70,8 +75,7 @@ export class UsersController {
   @HttpCode(200)
   @ApiOperation({
     summary: 'Получить информацию о себе',
-    description:
-      'Получает всю информацию о себе, включает account, profile',
+    description: 'Получает всю информацию о себе, включает account, profile',
   })
   @ApiResponse({
     status: 200,
@@ -84,11 +88,11 @@ export class UsersController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Пользователь не найден'
+    description: 'Пользователь не найден',
   })
   public async findMe(@Authorized('id') userId: string) {
     const command = UserMapper.toFindMeCommand(userId);
     const result = await this.findMeUseCase.execute(command);
-    return UserMapper.toFindMeResponse(result);
+    return UserMapper.toFindMeResponse(result, this.storage);
   }
 }

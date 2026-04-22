@@ -1,0 +1,10 @@
+model ServiceCategory {
+  serviceId  String @map("service_id")
+  categoryId String @map("category_id")
+
+  service  Service  @relation(fields: [serviceId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@id([serviceId, categoryId])
+  @@map("service_categories")
+}

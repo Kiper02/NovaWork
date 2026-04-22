@@ -1,5 +1,5 @@
 import { CreateWorkspaceDto } from '../dto/workspace/create-workspace.dto';
-import { WorkspaceEntity } from '../../core/domain/entities/workspace.entity';
+import { WorkspaceEntity } from '../../core/domain/entities/project/workspace.entity';
 import { WorkspaceResponseDto } from '../dto/workspace/workspace-response.dto';
 import { FindAllWorkspaceQueryDto } from '../dto/workspace/find-all-workspace-query.dto';
 import { BaseQueryDto } from '../dto/shared/base-query.dto';

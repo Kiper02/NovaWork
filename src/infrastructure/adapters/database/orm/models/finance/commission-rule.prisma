@@ -1,0 +1,34 @@
+model CommissionRule {
+  id              String              @id @default(uuid())
+  name            String
+  entityType      EnumEntityType      @map("entity_type")
+  calculationType EnumCalculationType @map("calculation_type")
+  value           Float
+  minAmount       Float?              @map("min_amount")
+  maxAmount       Float?              @map("max_amount")
+
+  isActive  Boolean   @default(true) @map("is_active")
+  priority  Int
+  validFrom DateTime  @map("valid_form")
+  validTo   DateTime? @map("valid_to")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  isSubscription Boolean? @map("is_subscription")
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @map("category_id")
+
+  @@map("commission_rules")
+}
+
+enum EnumCalculationType {
+  PERCENT
+  FIXED
+}
+
+enum EnumEntityType {
+  CONTRACT
+  WITHDRAWAL
+  DEPOSIT
+}

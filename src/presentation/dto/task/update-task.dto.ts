@@ -1,9 +1,11 @@
-import { EnumTaskStatus } from '../../../core/domain/entities/task.entity';
+import { EnumTaskStatus } from '../../../core/domain/entities/project/task.entity';
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
   IsOptional,
   IsString,
+  IsUUID,
   Length,
   Max,
   Min,
@@ -69,4 +71,14 @@ export class UpdateTaskDto {
   @IsBoolean()
   @IsOptional()
   public isPublished?: boolean = true;
+
+  @ApiProperty({
+    description: 'Массив идентификаторов категорий',
+    example: ['04331c2d-c1d2-4e35-8ed7-6c5171cff845'],
+    required: false,
+  })
+  @IsUUID(4, { each: true })
+  @IsArray()
+  @IsOptional()
+  public categoryIds?: string[] = [];
 }

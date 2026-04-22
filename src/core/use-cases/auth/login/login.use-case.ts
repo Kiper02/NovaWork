@@ -1,7 +1,7 @@
-import { UserRepository } from '../../../domain/repositories/user.repository';
-import { PasswordHasherPort } from '../../../ports/password-hasher.port';
+import { UserRepository } from '../../../domain/repositories/user/user.repository';
+import { PasswordHasherPort } from '../../../ports/password-hasher/password-hasher.port';
 import { ILoginCommand } from './login.command';
-import { UserEntity } from '../../../domain/entities/user.entity';
+import { UserEntity } from '../../../domain/entities/user/user.entity';
 import { UserNotFoundException } from '../../../domain/exceptions/user/user-not-found.exception';
 import { InvalidCredentialsException } from '../../../domain/exceptions/auth/invalid-credentials-exception';
 import { Injectable } from '@nestjs/common';

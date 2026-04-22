@@ -1,0 +1,9 @@
+model PlatformSettings {
+  id        String   @id @default("singleton")
+  settings  Json
+  version   Int
+  updatedBy String
+  updatedAt DateTime @updatedAt
+
+  @@map("platform_settings")
+}

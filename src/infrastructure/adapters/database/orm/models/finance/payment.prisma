@@ -1,0 +1,27 @@
+model Payment {
+  id String @id @default(uuid())
+
+  amount   Decimal
+  currency EnumPaymentCurrency @default(RUB)
+
+  status     EnumPaymentStatus
+  externalId String?           @unique @map("external_id")
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String  @map("account_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("payments")
+}
+
+enum EnumPaymentCurrency {
+  RUB
+}
+
+enum EnumPaymentStatus {
+  PENDING
+  SUCCEED
+  FAILED
+}

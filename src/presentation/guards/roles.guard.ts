@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { GlobalRoleRepository } from '../../core/domain/repositories/global-role.repository';
+import { GlobalRoleRepository } from '../../core/domain/repositories/user/global-role.repository';
 import { Reflector } from '@nestjs/core';
 import type { Request} from 'express'
-import { UserEntity } from '../../core/domain/entities/user.entity';
+import { UserEntity } from '../../core/domain/entities/user/user.entity';
 
 @Injectable()
 export class GlobalRolesGuard implements CanActivate {

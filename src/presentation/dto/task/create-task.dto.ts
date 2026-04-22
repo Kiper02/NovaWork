@@ -1,8 +1,10 @@
-import { EnumTaskStatus } from '../../../core/domain/entities/task.entity';
+import { EnumTaskStatus } from '../../../core/domain/entities/project/task.entity';
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUUID,
@@ -26,7 +28,7 @@ export class CreateTaskDto {
     description: 'Описание задачи',
     example: 'Some description',
   })
-  @Length(20, 1000)
+  @Length(5, 1000)
   @IsString()
   @IsNotEmpty()
   public description: string;
@@ -37,7 +39,7 @@ export class CreateTaskDto {
   })
   @Max(150000)
   @Min(100)
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   public minPrice: number;
 
@@ -47,7 +49,7 @@ export class CreateTaskDto {
   })
   @Max(150000)
   @Min(100)
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   public maxPrice: number;
 
@@ -93,4 +95,14 @@ export class CreateTaskDto {
   @IsString()
   @IsOptional()
   public projectId?: string;
+
+  @ApiProperty({
+    description: 'Массив идентификаторов категорий',
+    example: ['04331c2d-c1d2-4e35-8ed7-6c5171cff845'],
+    required: false,
+  })
+  @IsUUID(4, { each: true })
+  @IsArray()
+  @IsOptional()
+  public categoryIds?: string[] = [];
 }

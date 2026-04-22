@@ -18,16 +18,21 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     this.logger.error(exception);
 
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    let status = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message: string = 'An unknown error has occurred';
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'An unknown error has occurred';
-
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
+      const response = exception.getResponse();
+      if (typeof response === 'string') {
+        message = response;
+      } else if (typeof response === 'object' && response !== null) {
+        message = (response as any).message ?? JSON.stringify(response);
+        if (Array.isArray(message)) message = message[0];
+      } else {
+        message = String(response);
+      }
+    }
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),

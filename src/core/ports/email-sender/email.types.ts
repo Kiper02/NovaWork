@@ -1,0 +1,5 @@
+export enum EnumEmailType {
+  VERIFICATION_CODE = 'VERIFICATION_CODE',
+  WELCOME = 'WELCOME',
+  BID_ACCEPTED = 'BID_ACCEPTED',
+}

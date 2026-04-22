@@ -1,6 +1,7 @@
 import { BaseQueryDto } from '../shared/base-query.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsBoolean,
   IsDate,
   IsDecimal,
@@ -9,7 +10,7 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { EnumTaskStatus } from '../../../core/domain/entities/task.entity';
+import { EnumTaskStatus } from '../../../core/domain/entities/project/task.entity';
 
 export class FindAllTaskQueryDto extends BaseQueryDto {
   @ApiProperty({
@@ -102,4 +103,14 @@ export class FindAllTaskQueryDto extends BaseQueryDto {
   @IsEnum(EnumTaskStatus)
   @IsOptional()
   public status?: EnumTaskStatus;
+
+  @ApiProperty({
+    description: 'Массив идентификаторов категорий',
+    example: ['04331c2d-c1d2-4e35-8ed7-6c5171cff845'],
+    required: false,
+  })
+  @IsUUID(4, { each: true })
+  @IsArray()
+  @IsOptional()
+  public categoryIds?: string[] = [];
 }
