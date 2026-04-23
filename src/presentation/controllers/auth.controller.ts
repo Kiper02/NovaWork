@@ -24,6 +24,7 @@ import type {Request, Response} from 'express'
 import { Auth } from '../decorators/auth.decorator';
 import { ConfigService } from '@nestjs/config';
 import { UserAlreadyExistsExceptionFilter } from '../filters/user/user-already-exists-exception.filter';
+import { UserNotFoundExceptionFilter } from '../filters/user/user-not-found-exception.filter';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -54,6 +55,7 @@ export class AuthController {
     return AuthMapper.toResponse(user);
   }
 
+  @UseFilters(UserNotFoundExceptionFilter)
   @Post('login')
   @ApiOperation({
     summary: 'Вход в систему',
@@ -70,12 +72,9 @@ export class AuthController {
     description: 'Пользователь не найден',
   })
   public async login(@Body() dto: LoginDto, @Req() req: Request) {
-    try {
-      const command = AuthMapper.toLoginCommand(dto);
-      const user = await this.loginUseCase.execute(command);
-      await SessionHelper.save(req, user);
-      return AuthMapper.toResponse(user);
-    } catch (e) {}
+    const command = AuthMapper.toLoginCommand(dto);
+    const user = await this.loginUseCase.execute(command);
+    await SessionHelper.save(req, user);
   }
 
   @Auth()

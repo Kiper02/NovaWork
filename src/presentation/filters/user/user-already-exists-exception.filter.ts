@@ -12,7 +12,8 @@ export class UserAlreadyExistsExceptionFilter {
     response.status(HttpStatus.CONFLICT).json({
       statusCode: HttpStatus.CONFLICT,
       timestamp: new Date().toISOString(),
-      message: exception.message,
+      message: 'Пользователь с таким email или username уже существует',
+      code: 'USER_ALREADY_EXISTS',
     });
   }
 }

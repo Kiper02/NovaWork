@@ -3,6 +3,6 @@ export interface IRegisterCommand {
   password: string;
   email: string;
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
 }

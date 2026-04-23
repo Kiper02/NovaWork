@@ -11,7 +11,7 @@ export interface UserCreationParams {
   username: string;
   passwordHash: string;
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
   storageQuotaBytes: bigint;
 }
@@ -37,7 +37,7 @@ export class UserCreationService {
     const profile = new ProfileEntity(
       uuid(),
       params.firstName,
-      params.middleName,
+      params.middleName ?? null,
       params.lastName,
       userId,
       null,

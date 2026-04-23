@@ -76,7 +76,7 @@ export class ProfileMapper {
       userId: entity.userId,
       firstName: entity.firstName,
       avatar: avatarUrl,
-      middleName: entity.middleName,
+      middleName: entity.middleName ?? null,
       lastName: entity.lastName,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,

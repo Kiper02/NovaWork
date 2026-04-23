@@ -10,6 +10,7 @@ import { sessionConfig } from './infrastructure/config/session.config';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './shared/filters/all-exceptions.filter';
 import { RedisIoAdapter } from './infrastructure/adapters/redis-io/redis-io.adapter';
+import { UnauthorizedExceptionFilter } from './presentation/filters/auth/unauthorized-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,7 +28,10 @@ async function bootstrap() {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig());
   SwaggerModule.setup('docs', app, swaggerDocument);
 
-  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(
+    new UnauthorizedExceptionFilter(),
+    new AllExceptionsFilter(),
+  );
   await app.listen(config.getOrThrow('PORT'));
 }
 bootstrap().then(r => console.log('Server is started'));

@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   Length,
+  Max,
 } from 'class-validator';
 
 export class RegisterDto {
@@ -51,11 +52,11 @@ export class RegisterDto {
   @ApiProperty({
     description: 'Отчество (при наличии)',
     example: 'Иванович',
+    required: false,
   })
-  @Length(1, 100)
   @IsString()
   @IsOptional()
-  public middleName: string;
+  public middleName?: string;
 
   @ApiProperty({
     description: 'Фамилия',

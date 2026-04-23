@@ -33,7 +33,7 @@ export class ProfileMapper {
     return {
       id: entity.id,
       firstName: entity.firstName,
-      middleName: entity.middleName,
+      middleName: entity.middleName ?? null,
       lastName: entity.lastName,
       user: {
         connect: {
@@ -54,7 +54,7 @@ export class ProfileMapper {
     const result: Prisma.ProfileUpdateInput = {};
 
     if (data.firstName !== undefined) result.firstName = data.firstName;
-    if (data.middleName !== undefined) result.middleName = data.middleName;
+    if (data.middleName) result.middleName = data.middleName;
     if (data.lastName !== undefined) result.lastName = data.lastName;
     if (data.avatar !== undefined) result.avatar = data.avatar;
     if (data.updatedAt !== undefined) result.updatedAt = data.updatedAt;

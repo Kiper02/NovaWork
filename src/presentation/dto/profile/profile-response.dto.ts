@@ -23,7 +23,7 @@ export class ProfileResponseDto {
     description: 'Отчество',
     example: 'Иванович',
   })
-  public middleName: string;
+  public middleName: string | null;
   @ApiProperty({
     description: 'Фамилия',
     example: 'Иванов',

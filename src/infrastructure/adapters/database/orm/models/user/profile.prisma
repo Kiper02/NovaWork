@@ -3,7 +3,7 @@ model Profile {
 
   avatar     String?
   firstName  String  @map("first_name")
-  middleName String  @map("middle_name")
+  middleName String? @map("middle_name")
   lastName   String  @map("last_name")
 
   notificationSettings Json @map("notification_settings")

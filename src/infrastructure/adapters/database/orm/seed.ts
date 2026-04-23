@@ -1,7 +1,8 @@
-import platformSettingsSeed from './seed/platform-settings.seed';
+import platformSettingsSeed from './seed/executors/platform-settings.seed';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
+import categorySeed from './seed/executors/category.seed';
 
 const connectionString = `${process.env.DATABASE_URL}`;
 const pool = new Pool({ connectionString });
@@ -10,6 +11,7 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   await platformSettingsSeed(prisma);
+  await categorySeed(prisma)
 }
 
 main()
