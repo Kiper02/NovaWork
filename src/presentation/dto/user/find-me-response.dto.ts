@@ -24,21 +24,21 @@ export class FindMeResponseDto {
 
   @ApiProperty({
     description: 'Аккаунт пользователя',
-    example: AccountResponseDto,
+    type: () => AccountResponseDto,
   })
   account: AccountResponseDto | null;
 
   @ApiProperty({
     description: 'Профиль пользователя',
-    example: ProfileResponseDto,
+    type: () => ProfileResponseDto,
   })
   profile: ProfileResponseDto | null;
 
   @ApiProperty({
     description: 'Рабочие пространства пользователя',
-    example: WorkspaceResponseDto
+    example: WorkspaceResponseDto,
   })
-  workspaces: WorkspaceResponseDto[]
+  workspaces: WorkspaceResponseDto[];
 
   @ApiProperty({
     description: 'Дата создания',

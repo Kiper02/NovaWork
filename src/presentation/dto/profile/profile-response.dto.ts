@@ -24,6 +24,7 @@ export class ProfileResponseDto {
     example: 'Иванович',
   })
   public middleName: string | null;
+
   @ApiProperty({
     description: 'Фамилия',
     example: 'Иванов',
