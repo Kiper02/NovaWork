@@ -29,6 +29,8 @@ import { CommissionCalculateModule } from './modules/finance/commission-calculat
 import { BeneficiaryModule } from './modules/finance/beneficiary.module';
 import { BankModule } from './modules/finance/bank.module';
 import { BankDetailsModule } from './modules/finance/bank-details.module';
+import { TransactionModule } from './modules/finance/transaction.module';
+import { CategoryModule } from './modules/project/category.module';
 
 @Module({
   imports: [
@@ -64,6 +66,8 @@ import { BankDetailsModule } from './modules/finance/bank-details.module';
     BeneficiaryModule,
     BankModule,
     BankDetailsModule,
+    CategoryModule,
+    TransactionModule,
   ],
   controllers: [],
 })

@@ -8,7 +8,7 @@ import { ServiceFiltersValueObject } from '../../../../../core/domain/value-obje
 import { ServiceMapper } from '../../mappers/project/service.mapper';
 import { Prisma } from '@prisma/client';
 import { TaskFiltersValueObject } from '../../../../../core/domain/value-objects/task/task-filters.value-object';
-import { CategoryMapper } from '../../mappers/chat/category.mapper';
+import { CategoryMapper } from '../../mappers/project/category.mapper';
 import { ServiceAggregate } from '../../../../../core/domain/aggregates/service.aggregate';
 import { ServiceWhereBuilder } from '../../builders/service-where.builder';
 

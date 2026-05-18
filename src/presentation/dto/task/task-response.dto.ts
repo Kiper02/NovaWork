@@ -80,4 +80,16 @@ export class TaskResponseDto {
     example: ['04331c2d-c1d2-4e35-8ed7-6c5171cff845'],
   })
   public categoryIds: string[] = [];
+
+  @ApiProperty({
+    description: 'Количество откликов на задачу',
+    example: 5,
+  })
+  public bidsCount: number;
+
+  @ApiProperty({
+    description: 'Откликнулся ли я на задачу',
+    example: true,
+  })
+  public iResponded: boolean;
 }

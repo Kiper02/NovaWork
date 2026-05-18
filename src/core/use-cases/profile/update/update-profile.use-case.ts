@@ -35,6 +35,8 @@ export class UpdateProfileUseCase {
       firstName: command.firstName,
       middleName: command.middleName,
       lastName: command.lastName,
+      about: command.about,
+      role: command.role,
     };
 
     if (command.avatar) {
@@ -46,8 +48,6 @@ export class UpdateProfileUseCase {
         'avatars',
       );
     }
-
-    console.log(updateData);
 
     return this.profileRepository.update(command.id, updateData);
   }

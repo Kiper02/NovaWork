@@ -1,8 +1,7 @@
 import { EnumTaskStatus } from '../../../core/domain/entities/project/task.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserResponseDto } from '../user/user-response.dto';
 import { CategoryResponseDto } from '../category/category-response.dto';
-import { ProfileResponseDto } from '../profile/profile-response.dto';
+import { UserWithProfileResponseDto } from '../user/user-with-profile-response.dto';
 
 export class TaskResponseForDetailsDto {
   @ApiProperty({
@@ -13,9 +12,9 @@ export class TaskResponseForDetailsDto {
 
   @ApiProperty({
     description: 'Владелец задачи',
-    example: '04331c2d-c1d2-4e35-8ed7-6c5171cff845',
+    type: () => UserWithProfileResponseDto,
   })
-  public user: UserResponseDto & {profile: ProfileResponseDto | null};
+  public user: UserWithProfileResponseDto;
 
   @ApiProperty({
     description: 'Заголовок задачи',
@@ -80,7 +79,19 @@ export class TaskResponseForDetailsDto {
 
   @ApiProperty({
     description: 'Массив категорий',
-    example: CategoryResponseDto,
+    type: () => [CategoryResponseDto],
   })
   public categories: CategoryResponseDto[] = [];
+
+  @ApiProperty({
+    description: 'Количество откликов на задачу',
+    example: 5,
+  })
+  public bidsCount: number;
+
+  @ApiProperty({
+    description: 'Откликнулся ли я на задачу',
+    example: true,
+  })
+  public iResponded: boolean;
 }

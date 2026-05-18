@@ -55,6 +55,16 @@ export class AccountRepositoryImpl implements AccountRepository {
     );
   }
 
+  public async findById(id: string): Promise<AccountEntity | null> {
+    const result = await this.prismaService.account.findUnique({
+      where: { id },
+    });
+
+    if (!result) return null;
+
+    return AccountMapper.toEntity(result);
+  }
+
   public async findByUserId(userId: string): Promise<AccountEntity | null> {
     const result = await this.prismaService.account.findUnique({
       where: {

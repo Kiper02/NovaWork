@@ -2,6 +2,7 @@ import { EnumTaskStatus } from '../../../domain/entities/project/task.entity';
 
 export interface IFindAllTaskCommand {
   userId?: string;
+  currentUserId?: string;
   title?: string;
   description?: string;
   isPublished?: boolean;

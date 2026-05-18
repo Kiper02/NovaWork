@@ -6,6 +6,9 @@ model Profile {
   middleName String? @map("middle_name")
   lastName   String  @map("last_name")
 
+  about String?
+  role  String?
+
   notificationSettings Json @map("notification_settings")
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

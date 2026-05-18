@@ -12,12 +12,12 @@ export class TransactionEntity {
   ) {}
 }
 
-enum EnumTransactionType {
+export enum EnumTransactionType {
   DEPOSIT = 'DEPOSIT',
   WITHDRAWAL = 'WITHDRAWAL',
 }
 
-enum EnumTransactionStatus {
+export enum EnumTransactionStatus {
   PENDING = 'PENDING',
   SUCCESS = 'SUCCESS',
   FAILED = 'FAILED',

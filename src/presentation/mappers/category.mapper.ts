@@ -6,6 +6,10 @@ import { FindAllCategoryQueryDto } from '../dto/category/find-all-category-query
 import { IFindAllCategoryCommand } from '../../core/use-cases/category/find-all/find-all-category.command';
 import { CategoryEntity } from '../../core/domain/entities/shared/category.entity';
 import { CategoryResponseDto } from '../dto/category/category-response.dto';
+import { FindSimilarCategoryQueryDto } from '../dto/category/find-similar-category-query.dto';
+import {
+  IFindAllCategorySimilarCommand
+} from '../../core/use-cases/category/find-similar/find-all-category-similar.command';
 
 export class CategoryMapper {
   public static toCreateCommand(
@@ -15,6 +19,7 @@ export class CategoryMapper {
       name: dto.name,
       parentId: dto.parentId,
       description: dto.description,
+      tags: dto.tags
     };
   }
 
@@ -26,6 +31,7 @@ export class CategoryMapper {
       id: categoryId,
       name: dto.name,
       description: dto.description,
+      tags: dto.tags
     };
   }
 
@@ -40,6 +46,17 @@ export class CategoryMapper {
     };
   }
 
+  public static toFindSimilarCommand(query: FindSimilarCategoryQueryDto): IFindAllCategorySimilarCommand {
+    return {
+      name: query.name,
+      parentId: query.parentId,
+      page: query.page,
+      limit: query.limit,
+      excludeIds: query.excludeIds,
+      tags: query.tags
+    };
+  }
+
   public static toResponse(entity: CategoryEntity): CategoryResponseDto {
     return {
       id: entity.id,
@@ -47,6 +64,7 @@ export class CategoryMapper {
       description: entity.description,
       parentId: entity.parentId,
       childrenIds: entity.childrenIds,
+      tags: entity.tags
     }
   }
 }

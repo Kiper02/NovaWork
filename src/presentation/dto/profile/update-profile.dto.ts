@@ -28,4 +28,24 @@ export class UpdateProfileDto {
   @IsString()
   @IsOptional()
   public lastName?: string;
+
+  @ApiProperty({
+    description: 'О себе',
+    example: 'Опытный разработчик',
+    required: false,
+  })
+  @Length(0, 500)
+  @IsString()
+  @IsOptional()
+  public about?: string;
+
+  @ApiProperty({
+    description: 'Роль пользователя',
+    example: 'admin',
+    required: false,
+  })
+  @Length(0, 50)
+  @IsString()
+  @IsOptional()
+  public role?: string;
 }

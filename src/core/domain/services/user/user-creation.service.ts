@@ -41,6 +41,8 @@ export class UserCreationService {
       params.lastName,
       userId,
       null,
+      null,
+      null,
       NotificationSettingsValueObject.default(),
       new Date(),
       new Date(),

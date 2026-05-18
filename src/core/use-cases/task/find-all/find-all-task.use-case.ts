@@ -30,6 +30,6 @@ export class FindAllTaskUseCase {
       command.limit,
     );
 
-    return this.taskQueryRepository.findAllForDetails(params, pagination);
+    return this.taskQueryRepository.findAllForDetails(params, pagination, command.currentUserId);
   }
 }

@@ -15,7 +15,6 @@ import {
 import { UserResponseDto } from '../dto/user/user-response.dto';
 import { RegisterUseCase } from '../../core/use-cases/auth/register/register.use-case';
 import { RegisterDto } from '../dto/auth/register.dto';
-import { UserAlreadyExistsException } from '../../core/domain/exceptions/user/user-already-exists.exception';
 import { AuthMapper } from '../mappers/auth.mapper';
 import { LoginUseCase } from '../../core/use-cases/auth/login/login.use-case';
 import { LoginDto } from '../dto/auth/login.dto';
@@ -32,6 +31,7 @@ export class AuthController {
   constructor(
     private readonly registerUseCase: RegisterUseCase,
     private readonly loginUseCase: LoginUseCase,
+    private readonly configService: ConfigService
   ) {}
 
   @UseFilters(UserAlreadyExistsExceptionFilter)
@@ -74,7 +74,7 @@ export class AuthController {
   public async login(@Body() dto: LoginDto, @Req() req: Request) {
     const command = AuthMapper.toLoginCommand(dto);
     const user = await this.loginUseCase.execute(command);
-    await SessionHelper.save(req, user);
+    return SessionHelper.save(req, user, this.configService);
   }
 
   @Auth()
@@ -98,6 +98,6 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     configService: ConfigService,
   ) {
-    await SessionHelper.destroy(req, res, configService);
+    await SessionHelper.destroy(req, res, this.configService);
   }
 }

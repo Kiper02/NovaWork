@@ -1,7 +1,7 @@
 import { CreateUserDto } from '../dto/user/create-user.dto';
 import { UserEntity } from '../../core/domain/entities/user/user.entity';
 import { UserResponseDto } from '../dto/user/user-response.dto';
-import { ICreateUserCommand } from '../../core/use-cases/user/create-user/create-user.command';
+import { ICreateUserCommand } from '../../core/use-cases/user/create/create-user.command';
 import { IFindMeCommand } from '../../core/use-cases/user/find-me/find-me.command';
 import { UserAggregate } from '../../core/domain/aggregates/user.aggregate';
 import { FindMeResponseDto } from '../dto/user/find-me-response.dto';

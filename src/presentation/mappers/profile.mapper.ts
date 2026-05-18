@@ -19,6 +19,8 @@ export class ProfileMapper {
       middleName: dto.middleName,
       lastName: dto.lastName,
       userId: dto.userId,
+      about: dto.about,
+      role: dto.role,
     };
   }
 
@@ -29,11 +31,11 @@ export class ProfileMapper {
     avatar?: Express.Multer.File,
   ): IUpdateProfileCommand {
     let avatarDataCommand: IAvatarDataCommand | undefined = undefined;
-    if(avatar && avatar.buffer && avatar.mimetype) {
+    if (avatar && avatar.buffer && avatar.mimetype) {
       avatarDataCommand = {
         buffer: avatar.buffer,
-        mimetype: avatar.mimetype
-      }
+        mimetype: avatar.mimetype,
+      };
     }
     return {
       id: id,
@@ -42,6 +44,8 @@ export class ProfileMapper {
       firstName: dto.firstName,
       middleName: dto.middleName,
       lastName: dto.lastName,
+      about: dto.about,
+      role: dto.role,
     };
   }
 
@@ -65,9 +69,9 @@ export class ProfileMapper {
     entity: ProfileEntity,
     storage: StoragePort,
   ): Promise<ProfileResponseDto> {
-    let avatarUrl: string | null = null
+    let avatarUrl: string | null = null;
 
-    if(entity.avatar) {
+    if (entity.avatar) {
       avatarUrl = await storage.get(entity.avatar);
     }
 
@@ -76,6 +80,8 @@ export class ProfileMapper {
       userId: entity.userId,
       firstName: entity.firstName,
       avatar: avatarUrl,
+      about: entity.about ?? null,
+      role: entity.role ?? null,
       middleName: entity.middleName ?? null,
       lastName: entity.lastName,
       createdAt: entity.createdAt,

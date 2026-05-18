@@ -3,9 +3,9 @@ import { EmailSenderPort } from '../../../ports/email-sender/email-sender.port';
 import { VerificationCodeGeneratorPort } from '../../../ports/verification-code-generator/verification-code-generator.port';
 import { UserEntity } from '../../../domain/entities/user/user.entity';
 import { IRegisterCommand } from './register.command';
-import { CreateUserUseCase } from '../../user/create-user/create-user.use-case';
+import { CreateUserUseCase } from '../../user/create/create-user.use-case';
 
-jest.mock('../../user/create-user/create-user.use-case')
+jest.mock('../../user/create/create-user.use-case')
 jest.mock('../../../ports/email-sender/email-sender.port');
 jest.mock('../../../ports/verification-code-generator/verification-code-generator.port');
 

@@ -1,7 +1,7 @@
 import { VerificationCodeGeneratorPort } from '../../../ports/verification-code-generator/verification-code-generator.port';
 import { UserEntity } from '../../../domain/entities/user/user.entity';
 import { IRegisterCommand } from './register.command';
-import { CreateUserUseCase } from '../../user/create-user/create-user.use-case';
+import { CreateUserUseCase } from '../../user/create/create-user.use-case';
 import { Injectable } from '@nestjs/common';
 import { VerificationEmailStrategy } from '../../../../infrastructure/adapters/mail/strategies/verification-email.strategy';
 

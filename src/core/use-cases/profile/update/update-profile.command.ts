@@ -3,6 +3,11 @@ export interface IAvatarDataCommand {
   mimetype: string;
 }
 
+export interface IUpdateProfileSettingsCommand {
+  emailEnabled?: boolean;
+  pushEnabled?: boolean;
+}
+
 export interface IUpdateProfileCommand {
   id: string;
   userId: string;
@@ -10,4 +15,6 @@ export interface IUpdateProfileCommand {
   middleName?: string;
   lastName?: string;
   avatar?: IAvatarDataCommand;
+  about?: string;
+  role?: string;
 }

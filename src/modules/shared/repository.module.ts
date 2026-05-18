@@ -55,6 +55,18 @@ import { BankDetailsRepository } from '../../core/domain/repositories/finance/ba
 import {
   BankDetailsRepositoryImpl
 } from '../../infrastructure/adapters/database/repositories/finance/bank-details.repository.impl';
+import {
+  CategoryRepositoryImpl
+} from '../../infrastructure/adapters/database/repositories/shared/category.repository.impl';
+import { CategoryRepository } from '../../core/domain/repositories/shared/category.repository';
+import { TransactionRepository } from '../../core/domain/repositories/finance/transaction-repository';
+import {
+  TransactionRepositoryImpl
+} from '../../infrastructure/adapters/database/repositories/finance/transaction.repository.impl';
+import { TransactionQueryRepository } from '../../core/domain/repositories/finance/transaction-query.repository';
+import {
+  TransactionQueryRepositoryImpl
+} from '../../infrastructure/adapters/database/repositories/finance/transaction-query.repository.impl';
 
 
 @Global()
@@ -160,6 +172,18 @@ import {
       provide: BankDetailsRepository,
       useClass: BankDetailsRepositoryImpl,
     },
+    {
+      provide: CategoryRepository,
+      useClass: CategoryRepositoryImpl,
+    },
+    {
+      provide: TransactionRepository,
+      useClass: TransactionRepositoryImpl,
+    },
+    {
+      provide: TransactionQueryRepository,
+      useClass: TransactionQueryRepositoryImpl,
+    }
   ],
   exports: [
     AccountRepository,
@@ -187,6 +211,9 @@ import {
     PaymentRepository,
     CommissionRuleRepository,
     BankDetailsRepository,
+    CategoryRepository,
+    TransactionRepository,
+    TransactionQueryRepository,
   ],
 })
 export class RepositoryModule {}

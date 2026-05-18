@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -38,4 +39,13 @@ export class CreateCategoryDto {
   @IsUUID()
   @IsOptional()
   public parentId?: string;
+
+  @ApiProperty({
+    description: 'Список тэгов для поддержки получения релевантных категорий',
+    example: 'Java, Node.js, TypeScript',
+    required: false,
+  })
+  @IsArray()
+  @IsOptional()
+  public tags?: string[];
 }

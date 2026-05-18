@@ -18,7 +18,8 @@ export class CreateCategoryUseCase {
       command.name,
       command.parentId ?? null,
       [],
-      command.description ?? null
+      command.description ?? null,
+      command.tags ?? []
     )
 
     return this.categoryRepository.save(categoryEntity);

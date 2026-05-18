@@ -23,6 +23,8 @@ export class ProfileMapper {
       model.lastName,
       model.userId,
       model.avatar,
+      model.about,
+      model.role,
       notificationSettings,
       model.createdAt,
       model.updatedAt,
@@ -41,6 +43,8 @@ export class ProfileMapper {
         }
       },
       avatar: entity.avatar,
+      about: entity.about,
+      role: entity.role,
       notificationSettings:
         entity.notificationSettings.toJSON() as Prisma.InputJsonValue,
       createdAt: entity.createdAt,
@@ -58,6 +62,8 @@ export class ProfileMapper {
     if (data.lastName !== undefined) result.lastName = data.lastName;
     if (data.avatar !== undefined) result.avatar = data.avatar;
     if (data.updatedAt !== undefined) result.updatedAt = data.updatedAt;
+    if (data.about) result.about = data.about;
+    if (data.role) result.role = data.role;
 
     return result;
   }

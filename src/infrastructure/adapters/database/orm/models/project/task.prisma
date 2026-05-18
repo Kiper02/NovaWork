@@ -15,6 +15,7 @@ model Task {
 
   bids Bid[]
   taskCategories TaskCategory[]
+  taskViews TaskView[]
 
   contract Contract?
 

@@ -12,6 +12,7 @@ export class CategoryMapper {
       model.parentId,
       childrenIds,
       model.description ?? null,
+      model.tags
     );
   }
 
@@ -21,6 +22,7 @@ export class CategoryMapper {
       name: entity.name,
       parentId: entity.parentId,
       description: entity.description,
+      tags: entity.tags
     };
   }
 
@@ -31,6 +33,7 @@ export class CategoryMapper {
 
     if(data.name) result.name = data.name;
     if(data.description) result.description = data.description;
+    if (data.tags) result.tags = data.tags;
 
     return result;
   }

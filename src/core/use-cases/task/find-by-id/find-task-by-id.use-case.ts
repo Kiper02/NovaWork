@@ -12,6 +12,7 @@ export class FindTaskByIdUseCase {
   public async execute(command: IFindTaskByIdCommand) {
     const task = await this.taskQueryRepository.findByIdForDetails(
       command.taskId,
+      command.userId,
     );
     if (!task) {
       throw new TaskNotFoundException();

@@ -8,6 +8,8 @@ export class ProfileEntity {
     public readonly lastName: string,
     public readonly userId: string,
     public avatar: string | null,
+    public about: string | null,
+    public role: string | null,
     public readonly notificationSettings: NotificationSettingsValueObject,
     public readonly createdAt: Date,
     public readonly updatedAt: Date

@@ -6,7 +6,7 @@ import { PaginatedResultValueObject } from 'src/core/domain/value-objects/shared
 import { PaginationParamsValueObject } from 'src/core/domain/value-objects/shared/pagination-params.value-object';
 import { TaskFiltersValueObject } from 'src/core/domain/value-objects/task/task-filters.value-object';
 import { TaskMapper } from '../../mappers/project/task.mapper';
-import { CategoryMapper } from '../../mappers/chat/category.mapper';
+import { CategoryMapper } from '../../mappers/project/category.mapper';
 import { TaskWhereBuilder } from '../../builders/task-where.builder';
 import { UserMapper } from '../../mappers/user/user.mapper';
 import { ProfileEntity } from '../../../../../core/domain/entities/user/profile.entity';
@@ -21,6 +21,7 @@ export class TaskQueryRepositoryImpl implements TaskQueryRepository {
   public async findAllForDetails(
     params: TaskFiltersValueObject,
     pagination: PaginationParamsValueObject,
+    userId?: string,
   ): Promise<PaginatedResultValueObject<TaskAggregate>> {
     const where = TaskWhereBuilder.build(params);
 
@@ -49,6 +50,26 @@ export class TaskQueryRepositoryImpl implements TaskQueryRepository {
       this.prismaService.task.count({ where: where }),
     ]);
 
+    const taskIds = data.map(t => t.id);
+
+    const bidsCounts = await this.prismaService.bid.groupBy({
+      by: ['taskId'],
+      where: { taskId: { in: taskIds } },
+      _count: { id: true },
+    });
+
+    const bidsCountMap = new Map<string, number>();
+    bidsCounts.forEach(b => bidsCountMap.set(b.taskId, b._count.id));
+
+    let myBidIds = new Set<string>();
+    if (userId && taskIds.length > 0) {
+      const myBids = await this.prismaService.bid.findMany({
+        where: { userId, taskId: { in: taskIds } },
+        select: { taskId: true },
+      });
+      myBids.forEach(b => myBidIds.add(b.taskId));
+    }
+
     const aggregate: TaskAggregate[] = data.map((task) => {
       const taskEntity = TaskMapper.toEntity(task);
       const categoriesEntities = task.taskCategories.map((taskCategory) =>
@@ -63,11 +84,10 @@ export class TaskQueryRepositoryImpl implements TaskQueryRepository {
 
       const userAggregate = new UserAggregate(user, profile, null, null)
 
-      return {
-        task: taskEntity,
-        categories: categoriesEntities,
-        creator: userAggregate
-      };
+      const bidsCount = bidsCountMap.get(task.id) ?? 0;
+      const iResponded = myBidIds.has(task.id);
+
+      return new TaskAggregate(taskEntity, categoriesEntities, userAggregate, bidsCount, iResponded);
     });
 
     return new PaginatedResultValueObject(aggregate, total, pagination);
@@ -75,6 +95,7 @@ export class TaskQueryRepositoryImpl implements TaskQueryRepository {
 
   public async findByIdForDetails(
     taskId: string,
+    userId?: string,
   ): Promise<TaskAggregate | null> {
     const record = await this.prismaService.task.findUnique({
       where: { id: taskId },
@@ -112,7 +133,23 @@ export class TaskQueryRepositoryImpl implements TaskQueryRepository {
 
     const userAggregate = new UserAggregate(user, profile, null, null);
 
+    const bidsCount = await this.prismaService.bid.count({
+      where: { taskId: task.id }
+    });
 
-    return new TaskAggregate(task, categories, userAggregate);
+    let iResponded = false;
+    if (userId) {
+      const myBid = await this.prismaService.bid.findUnique({
+        where: {
+          userId_taskId: {
+            userId,
+            taskId,
+          }
+        }
+      });
+      iResponded = !!myBid;
+    }
+
+    return new TaskAggregate(task, categories, userAggregate, bidsCount, iResponded);
   }
 }

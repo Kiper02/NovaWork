@@ -53,6 +53,7 @@ export class TaskMapper {
 
   public static toFindAllCommand(
     dto: FindAllTaskQueryDto,
+    currentUserId?: string,
   ): IFindAllTaskCommand {
     return {
       title: dto.title,
@@ -65,14 +66,16 @@ export class TaskMapper {
       createdAtEnd: dto.createdAtEnd,
       status: dto.status,
       userId: dto.userId,
+      currentUserId: currentUserId,
       page: dto.page,
       limit: dto.limit,
     };
   }
 
-  public static toFindByIdCommand(taskId: string): IFindTaskByIdCommand {
+  public static toFindByIdCommand(taskId: string, userId?: string): IFindTaskByIdCommand {
     return {
       taskId: taskId,
+      userId: userId,
     };
   }
 
@@ -80,7 +83,7 @@ export class TaskMapper {
     aggregate: TaskAggregate,
     storage: StoragePort,
   ): Promise<TaskResponseForDetailsDto> {
-    const { task, categories, creator } = aggregate;
+    const { task, categories, creator, bidsCount, iResponded } = aggregate;
 
     const categoriesResponse = categories.map(CategoryMapper.toResponse);
     const { user, profile } = creator;
@@ -110,10 +113,12 @@ export class TaskMapper {
       categories: categoriesResponse,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
+      bidsCount: bidsCount,
+      iResponded: iResponded,
     };
   }
 
-  public static toResponse(entity: TaskEntity): TaskResponseDto {
+  public static toResponse(entity: TaskEntity, bidsCount: number = 0, iResponded: boolean = false): TaskResponseDto {
     return {
       id: entity.id,
       title: entity.title,
@@ -128,6 +133,8 @@ export class TaskMapper {
       categoryIds: entity.categoryIds,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
+      bidsCount: bidsCount,
+      iResponded: iResponded,
     };
   }
 }

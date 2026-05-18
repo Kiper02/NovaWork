@@ -5,5 +5,6 @@ export class CategoryEntity {
     public parentId: string | null,
     public childrenIds: string[],
     public description: string | null,
+    public tags: string[]
   ) {}
 }

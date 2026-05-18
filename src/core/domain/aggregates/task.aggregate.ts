@@ -6,6 +6,8 @@ export class TaskAggregate {
   constructor(
     public readonly task: TaskEntity,
     public readonly categories: CategoryEntity[],
-    public readonly creator: UserAggregate
+    public readonly creator: UserAggregate,
+    public readonly bidsCount: number = 0,
+    public readonly iResponded: boolean = false,
   ) {}
 }

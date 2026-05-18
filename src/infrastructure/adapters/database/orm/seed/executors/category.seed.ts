@@ -7,7 +7,7 @@ export default async function (prisma: PrismaClient) {
     await prisma.category.upsert({
       where: { name: root.name },
       update: {},
-      create: { name: root.name, description: root.description }
+      create: { name: root.name, description: root.description, tags: root.tags }
     });
   }
 
@@ -32,6 +32,7 @@ export default async function (prisma: PrismaClient) {
         name: child.name,
         description: child.description,
         parentId: parentId,
+        tags: child.tags,
       },
     });
   }

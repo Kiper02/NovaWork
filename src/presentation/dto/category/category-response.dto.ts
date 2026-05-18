@@ -33,4 +33,11 @@ export class CategoryResponseDto {
     type: [String],
   })
   public childrenIds: string[];
+
+  @ApiProperty({
+    description: 'Список тэгов для поддержки получения релевантных категорий',
+    example: ['Java', 'Node.js', 'TypeScript'],
+    required: false,
+  })
+  public tags: string[];
 }

@@ -15,4 +15,9 @@ export abstract class CategoryRepository {
   ): Promise<PaginatedResultValueObject<CategoryEntity>>;
   public abstract findById(id: string): Promise<CategoryEntity | null>;
   public abstract findByIds(ids: string[]): Promise<CategoryEntity[]>;
+  public abstract findByTagsIntersection(
+    tags: string[],
+    excludeIds: string[],
+    limit: number,
+  ): Promise<CategoryEntity[]>;
 }

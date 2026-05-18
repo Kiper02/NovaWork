@@ -9,6 +9,7 @@ export abstract class AccountRepository {
     id: string,
     data: Partial<Omit<AccountEntity, 'id'>>,
   ): Promise<AccountEntity>;
+  public abstract findById(id: string): Promise<AccountEntity | null>;
   public abstract findAll(
     params: AccountFiltersValueObject,
     pagination: PaginationParamsValueObject,

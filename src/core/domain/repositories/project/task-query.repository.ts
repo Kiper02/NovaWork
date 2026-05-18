@@ -7,9 +7,11 @@ export abstract class TaskQueryRepository {
   public abstract findAllForDetails(
     params: TaskFiltersValueObject,
     pagination: PaginationParamsValueObject,
+    userId?: string,
   ): Promise<PaginatedResultValueObject<TaskAggregate>>;
 
   public abstract findByIdForDetails(
     taskId: string,
+    userId?: string,
   ): Promise<TaskAggregate | null>;
 }

@@ -7,7 +7,7 @@ import { PaginatedResultValueObject } from 'src/core/domain/value-objects/shared
 import { PaginationParamsValueObject } from 'src/core/domain/value-objects/shared/pagination-params.value-object';
 import { ServiceWhereBuilder } from '../../builders/service-where.builder';
 import { ServiceMapper } from '../../mappers/project/service.mapper';
-import { CategoryMapper } from '../../mappers/chat/category.mapper';
+import { CategoryMapper } from '../../mappers/project/category.mapper';
 import { UserEntity } from '../../../../../core/domain/entities/user/user.entity';
 import { UserMapper } from '../../mappers/user/user.mapper';
 import { ProfileEntity } from '../../../../../core/domain/entities/user/profile.entity';

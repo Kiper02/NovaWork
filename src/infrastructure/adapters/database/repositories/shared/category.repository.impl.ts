@@ -5,7 +5,7 @@ import { CategoryEntity } from 'src/core/domain/entities/shared/category.entity'
 import { CategoryFiltersValueObject } from 'src/core/domain/value-objects/category/category-filters.value.object';
 import { PaginatedResultValueObject } from 'src/core/domain/value-objects/shared/paginated-result.value-object';
 import { PaginationParamsValueObject } from 'src/core/domain/value-objects/shared/pagination-params.value-object';
-import { CategoryMapper } from '../../mappers/chat/category.mapper';
+import { CategoryMapper } from '../../mappers/project/category.mapper';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -17,11 +17,11 @@ export class CategoryRepositoryImpl implements CategoryRepository {
     const record = await this.prismaService.category.create({
       data: model,
       include: {
-        children: true
-      }
-    })
+        children: true,
+      },
+    });
 
-    return CategoryMapper.toEntity(record)
+    return CategoryMapper.toEntity(record);
   }
   public async update(
     id: string,
@@ -30,14 +30,14 @@ export class CategoryRepositoryImpl implements CategoryRepository {
     const model = CategoryMapper.toModelUpdate(data);
     const record = await this.prismaService.category.update({
       where: {
-        id: id
+        id: id,
       },
       data: model,
       include: {
-        children: true
-      }
-    })
-    return CategoryMapper.toEntity(record)
+        children: true,
+      },
+    });
+    return CategoryMapper.toEntity(record);
   }
   public async findAll(
     params: CategoryFiltersValueObject,
@@ -48,7 +48,7 @@ export class CategoryRepositoryImpl implements CategoryRepository {
       this.prismaService.category.findMany({
         where: where,
         include: {
-          children: true
+          children: true,
         },
         skip: pagination.skip,
         take: pagination.take,
@@ -62,19 +62,61 @@ export class CategoryRepositoryImpl implements CategoryRepository {
       pagination,
     );
   }
-  public async findById(id: string): Promise<CategoryEntity | null> {
-    const record = await this.prismaService.category.findUnique({
-      where: {id: id},
-      include: {
-        children: true
-      }
-    })
-    if(!record) return null;
 
-    return CategoryMapper.toEntity(record)
+  public async findByTagsIntersection(
+    tags: string[],
+    excludeIds: string[],
+    limit: number,
+  ): Promise<CategoryEntity[]> {
+    let results: CategoryEntity[] = [];
+
+    if (tags && tags.length > 0) {
+      const matched = await this.prismaService.category.findMany({
+        where: {
+          id: { notIn: excludeIds },
+          tags: { hasSome: tags },
+        },
+        include: { children: true },
+        take: limit * 2,
+      });
+
+      const withCount = matched.map((record) => ({
+        entity: CategoryMapper.toEntity(record),
+        commonCount: record.tags.filter((tag) => tags.includes(tag)).length,
+      }));
+      withCount.sort((a, b) => b.commonCount - a.commonCount);
+      results = withCount.map((item) => item.entity);
+    }
+
+    if (results.length < limit) {
+      const existingIds = results.map((c) => c.id);
+      const fill = await this.prismaService.category.findMany({
+        where: {
+          id: { notIn: [...excludeIds, ...existingIds] },
+        },
+        include: { children: true },
+        take: limit - results.length,
+      });
+      const fillEntities = fill.map(CategoryMapper.toEntity);
+      results.push(...fillEntities);
+    }
+
+    return results.slice(0, limit);
   }
 
-  public async findByIds(ids:string[]): Promise<CategoryEntity[]> {
+  public async findById(id: string): Promise<CategoryEntity | null> {
+    const record = await this.prismaService.category.findUnique({
+      where: { id: id },
+      include: {
+        children: true,
+      },
+    });
+    if (!record) return null;
+
+    return CategoryMapper.toEntity(record);
+  }
+
+  public async findByIds(ids: string[]): Promise<CategoryEntity[]> {
     const records = await this.prismaService.category.findMany({
       where: {
         id: {
@@ -86,17 +128,17 @@ export class CategoryRepositoryImpl implements CategoryRepository {
       },
     });
 
-    return records.map(CategoryMapper.toEntity)
+    return records.map(CategoryMapper.toEntity);
   }
 
   private buildWhere(params: CategoryFiltersValueObject) {
-    const where: Prisma.CategoryWhereInput = {}
+    const where: Prisma.CategoryWhereInput = {};
 
-    if(params.name) {
+    if (params.name) {
       where.name = {
         contains: params.name,
-        mode: 'insensitive'
-      }
+        mode: 'insensitive',
+      };
     }
 
     return where;

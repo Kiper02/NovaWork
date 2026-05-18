@@ -1,8 +1,9 @@
 model Category {
-  id          String  @id @default(uuid())
-  name        String  @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String?
-  parentId    String? @map("parent_id")
+  parentId    String?  @map("parent_id")
+  tags        String[]
 
   parent   Category?  @relation("category-to-category", fields: [parentId], references: [id])
   children Category[] @relation("category-to-category")

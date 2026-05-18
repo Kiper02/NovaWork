@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsUUID, Length } from 'class-validator';
+import { IsArray, IsOptional, IsString, IsUUID, Length } from 'class-validator';
 
 export class UpdateCategoryDto {
   @ApiProperty({
@@ -33,4 +33,13 @@ export class UpdateCategoryDto {
   @IsUUID()
   @IsOptional()
   public parentId?: string | null;
+
+  @ApiProperty({
+    description: 'Список тэгов для поддержки получения релевантных категорий',
+    example: 'Java, Node.js, TypeScript',
+    required: false,
+  })
+  @IsArray()
+  @IsOptional()
+  public tags?: string[]
 }

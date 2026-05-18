@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { UsersController } from '../../presentation/controllers/users.controller';
-import { CreateUserUseCase } from '../../core/use-cases/user/create-user/create-user.use-case';
+import { CreateUserUseCase } from '../../core/use-cases/user/create/create-user.use-case';
 import { PasswordHasherPort } from '../../core/ports/password-hasher/password-hasher.port';
 import { Argon2PasswordHasher } from '../../infrastructure/adapters/security/argon2-password-hasher.service';
 import { UserCreationService } from '../../core/domain/services/user/user-creation.service';

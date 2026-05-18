@@ -6,7 +6,7 @@ import {
   Get,
   UseFilters, UseGuards,
 } from '@nestjs/common';
-import { CreateUserUseCase } from '../../core/use-cases/user/create-user/create-user.use-case';
+import { CreateUserUseCase } from '../../core/use-cases/user/create/create-user.use-case';
 import { CreateUserDto } from '../dto/user/create-user.dto';
 import { UserMapper } from '../mappers/user.mapper';
 import {

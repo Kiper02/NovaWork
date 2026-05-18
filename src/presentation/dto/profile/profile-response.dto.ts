@@ -33,9 +33,23 @@ export class ProfileResponseDto {
 
   @ApiProperty({
     description: 'URL аватара',
-    example: 'https://example.com'
+    example: 'https://example.com',
   })
   public avatar: string | null;
+
+  @ApiProperty({
+    description: 'О себе',
+    example: 'Опытный разработчик',
+    nullable: true,
+  })
+  public about: string | null;
+
+  @ApiProperty({
+    description: 'Роль пользователя',
+    example: 'admin',
+    nullable: true,
+  })
+  public role: string | null;
 
   @ApiProperty({
     description: 'Дата создания',

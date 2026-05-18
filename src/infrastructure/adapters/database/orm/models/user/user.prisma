@@ -23,6 +23,7 @@ model User {
   messages            Message[]
   chatMembers         ChatMember[]
   bids                Bid[]
+  taskViews           TaskView[]
   portfolioJobs       PortfolioJob[]
 
   senderInvitations    Invitation[] @relation("sender_invitations")

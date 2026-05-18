@@ -141,8 +141,11 @@ export class TasksController {
     status: 403,
     description: 'Нет доступа',
   })
-  public async findAll(@Query() query: FindAllTaskQueryDto) {
-    const command = TaskMapper.toFindAllCommand(query);
+  public async findAll(
+    @Query() query: FindAllTaskQueryDto,
+    @Authorized('id') userId: string,
+  ) {
+    const command = TaskMapper.toFindAllCommand(query, userId);
     const paginatedResult = await this.findAllTaskUseCase.execute(command);
     return PaginationFormatterUtil.formatAsync(
       paginatedResult,
@@ -170,8 +173,11 @@ export class TasksController {
     status: 404,
     description: 'Задача не найдена',
   })
-  public async findById(@Param('id') id: string) {
-    const command = TaskMapper.toFindByIdCommand(id);
+  public async findById(
+    @Param('id') id: string,
+    @Authorized('id') userId: string,
+  ) {
+    const command = TaskMapper.toFindByIdCommand(id, userId);
     const result = await this.findTaskByIdUseCase.execute(command);
     return TaskMapper.toResponseForDetails(result, this.storage);
   }

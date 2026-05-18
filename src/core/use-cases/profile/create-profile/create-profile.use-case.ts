@@ -3,9 +3,7 @@ import { ICreateProfileCommand } from './create-profile.command';
 import { ProfileEntity } from '../../../domain/entities/user/profile.entity';
 import { ProfileRepository } from '../../../domain/repositories/user/profile.repository';
 import { Injectable } from '@nestjs/common';
-import {
-  NotificationSettingsValueObject
-} from '../../../domain/value-objects/profile/notification-settings.value-object';
+import { NotificationSettingsValueObject } from '../../../domain/value-objects/profile/notification-settings.value-object';
 
 @Injectable()
 export class CreateProfileUseCase {
@@ -19,6 +17,8 @@ export class CreateProfileUseCase {
       command.lastName,
       command.userId,
       null,
+      command.about ?? null,
+      command.role ?? null,
       NotificationSettingsValueObject.default(),
       new Date(),
       new Date(),
